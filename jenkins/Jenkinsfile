@@ -8,7 +8,7 @@ pipeline {
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()
-                    env.developerCommit = !sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
+                    env.developerCommit = !sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
                 }
             }
         }
@@ -24,12 +24,15 @@ pipeline {
                 git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
             }
         }
-//         stage('deploy') {
-//             steps {
-//                 echo 'deploying the application...'
-//                 sh 'npm install'
-//             }
-//         }
+        stage('deploy') {
+            when {
+                expression { return env.developerCommit == 'true' }
+            }
+            steps {
+                echo 'deploying the application...'
+                sh 'pnpm install'
+            }
+        }
         stage('file edit') {
             when {
                 expression { return env.developerCommit == 'true' }
@@ -62,7 +65,7 @@ pipeline {
                     if git diff-index --quiet HEAD; then
                         echo "No changes detected"
                     else
-                        git commit -m "젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999"
+                        git commit -m "젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001"
                         git pull origin master
                         git merge --no-ff master
                         git push origin master

@@ -28,21 +28,23 @@ pipeline {
 //         }
         stage('file edit') {
             steps {
-                sh """
-                    FILE_PATH="./src/App.js"
-                    OLD_PATTERN="console.log([0-9]+)"
-                    NEW_STRING="console.log(${env.CURRENT_TIME})"
+                script {
+                    def FILE_PATH = "./src/App.js"
+                    def OLD_PATTERN = "console.log([0-9]+)"
+                    def NEW_STRING = "console.log(${env.CURRENT_TIME})"
 
-                    if [ -f "$FILE_PATH" ]; then
-                        sed -E "s|$OLD_PATTERN|$NEW_STRING|g" "$FILE_PATH" > "$FILE_PATH.tmp"
-                        mv "$FILE_PATH" "$FILE_PATH.bak"
-                        mv "$FILE_PATH.tmp" "$FILE_PATH"
-                        echo "파일 수정 완료: $FILE_PATH"
-                    else
+                    if (new File(FILE_PATH).exists()) {
+                        sh """
+                            sed -E "s|$OLD_PATTERN|$NEW_STRING|g" "$FILE_PATH" > "$FILE_PATH.tmp"
+                            mv "$FILE_PATH" "$FILE_PATH.bak"
+                            mv "$FILE_PATH.tmp" "$FILE_PATH"
+                            echo "파일 수정 완료: $FILE_PATH"
+                        """
+                    } else {
                         echo "파일을 찾을 수 없습니다: $FILE_PATH"
-                        exit 1
-                    fi
-                """
+                        error("파일을 찾을 수 없습니다: $FILE_PATH")
+                    }
+                }
             }
         }
         stage('Commit Changes') {

@@ -3,21 +3,19 @@ pipeline {
 
     stages {
          stage('initialize') {
-             when {
-                 expression { return !isJenkinsCommit() }
-             }
             steps {
                 echo '초기화 진행'
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()
+                    env.developerCommit = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
                 }
             }
         }
 
         stage('checkout') {
             when {
-                expression { return !isJenkinsCommit() }
+                expression { return env.developerCommit }
             }
             steps {
                 // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
@@ -34,7 +32,7 @@ pipeline {
 //         }
         stage('file edit') {
             when {
-                expression { return !isJenkinsCommit() }
+                expression { return env.developerCommit }
             }
             steps {
                 script {
@@ -55,7 +53,7 @@ pipeline {
         }
         stage('Merge to Master') {
             when {
-                expression { return !isJenkinsCommit() }
+                expression { return env.developerCommit }
             }
             steps {
                 // 변경 사항을 master 브랜치에 머지
@@ -73,9 +71,4 @@ pipeline {
             }
         }
     }
-}
-
-def isJenkinsCommit() {
-    def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
-    return commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
 }

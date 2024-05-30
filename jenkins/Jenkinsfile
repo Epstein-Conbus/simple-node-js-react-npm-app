@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-        stage('merge') {
+        stage('checkout') {
             steps {
                 git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
             }
@@ -22,9 +22,11 @@ pipeline {
         stage('deploy') {
             steps {
                 echo 'deploying the application...'
-
                 sh 'npm install'
-
+            }
+        }
+        state('file edit') {
+            steps {
                 sh """
                     FILE_PATH="./src/App.js"
                     OLD_STRING="console.log([0-9]+)"
@@ -40,7 +42,6 @@ pipeline {
                         exit 1
                     fi
                 """
-
             }
         }
         stage('Commit Changes') {
@@ -58,7 +59,7 @@ pipeline {
                 }
             }
         }
-        stage('Merge to Main') {
+        stage('Merge to Master') {
             steps {
                 // 변경 사항을 main 브랜치에 머지
                 sh """

@@ -30,7 +30,7 @@ pipeline {
                 sh """
                     FILE_PATH="./src/App.js"
                     OLD_STRING="console.log([0-9]+)"
-                    NEW_STRING="console.log(${$env.CURRENT_TIME})"
+                    NEW_STRING="console.log(\${env.CURRENT_TIME})"
 
                     if [ -f "\$FILE_PATH" ]; then
                         sed -E "s|\$OLD_PATTERN|$NEW_STRING|g" "\$FILE_PATH" > "\$FILE_PATH.tmp"

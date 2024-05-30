@@ -16,14 +16,6 @@ pipeline {
             steps {
                 // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
                 sh "echo 'Current time: ${env.CURRENT_TIME}'"
-
-                // Groovy 스크립트에서는 문자열 인터폴레이션을 사용하여 현재 시간 출력
-                echo '''
-                CHECKOUT
-
-                ${env.CURRENT_TIME}
-                '''
-
                 // git 체크아웃
                 git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
             }
@@ -34,25 +26,25 @@ pipeline {
 //                 sh 'npm install'
 //             }
 //         }
-//         stage('file edit') {
-//             steps {
-//                 sh """
-//                     FILE_PATH="./src/App.js"
-//                     OLD_STRING="console.log([0-9]+)"
-//                     NEW_STRING="console.log(\${env.CURRENT_TIME})"
-//
-//                     if [ -f "\$FILE_PATH" ]; then
-//                         sed -E "s|\$OLD_PATTERN|\$NEW_STRING|g" "\$FILE_PATH" > "\$FILE_PATH.tmp"
-//                         mv "\$FILE_PATH" "\$FILE_PATH.bak"
-//                         mv "\$FILE_PATH.tmp" "\$FILE_PATH"
-//                         echo "파일 수정 완료: \$FILE_PATH"
-//                     else
-//                         echo "파일을 찾을 수 없습니다: \$FILE_PATH"
-//                         exit 1
-//                     fi
-//                 """
-//             }
-//         }
+        stage('file edit') {
+            steps {
+                sh """
+                    FILE_PATH="./src/App.js"
+                    OLD_STRING="console.log([0-9]+)"
+                    NEW_STRING="console.log('${env.CURRENT_TIME}'')"
+
+                    if [ -f "\$FILE_PATH" ]; then
+                        sed -E "s|\$OLD_PATTERN|\$NEW_STRING|g" "\$FILE_PATH" > "\$FILE_PATH.tmp"
+                        mv "\$FILE_PATH" "\$FILE_PATH.bak"
+                        mv "\$FILE_PATH.tmp" "\$FILE_PATH"
+                        echo "파일 수정 완료: \$FILE_PATH"
+                    else
+                        echo "파일을 찾을 수 없습니다: \$FILE_PATH"
+                        exit 1
+                    fi
+                """
+            }
+        }
 //         stage('Commit Changes') {
 //             steps {
 //                 script {

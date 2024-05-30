@@ -5,7 +5,7 @@ import './App.css';
 class App extends Component {
 
   render() {
-      console.log('123123123123')
+      console.log(123123123123)
     return (
       <div className="App">
         <header className="App-header">

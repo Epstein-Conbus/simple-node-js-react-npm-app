@@ -3,6 +3,9 @@ pipeline {
 
     stages {
          stage('initialize') {
+             when {
+                 expression { return !isJenkinsCommit() }
+             }
             steps {
                 echo '초기화 진행'
                 script {
@@ -13,6 +16,9 @@ pipeline {
         }
 
         stage('checkout') {
+            when {
+                expression { return !isJenkinsCommit() }
+            }
             steps {
                 // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
                 sh "echo 'Current time: ${env.CURRENT_TIME}'"
@@ -27,6 +33,9 @@ pipeline {
 //             }
 //         }
         stage('file edit') {
+            when {
+                expression { return !isJenkinsCommit() }
+            }
             steps {
                 script {
                     def filePath = './src/App.js'
@@ -45,6 +54,9 @@ pipeline {
             }
         }
         stage('Commit Changes') {
+            when {
+                expression { return !isJenkinsCommit() }
+            }
             steps {
                 script {
                     // 변경 사항 커밋
@@ -53,13 +65,16 @@ pipeline {
                         if git diff-index --quiet HEAD; then
                             echo "No changes detected"
                         else
-                            git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
+                            git commit -m "젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999"
                         fi
                     """
                 }
             }
         }
         stage('Merge to Master') {
+            when {
+                expression { return !isJenkinsCommit() }
+            }
             steps {
                 // 변경 사항을 main 브랜치에 머지
                 sh """
@@ -69,7 +84,10 @@ pipeline {
                 """
             }
         }
-
-
     }
+}
+
+def isJenkinsCommit() {
+    def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
+    return commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
 }

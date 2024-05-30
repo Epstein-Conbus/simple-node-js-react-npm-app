@@ -5,7 +5,7 @@ pipeline {
        CURRENT_TIME=''
     }
     stages {
-        state('initialize') {
+        stage('initialize') {
             steps {
                 script {
                     // 현재 시간을 변수에 저장

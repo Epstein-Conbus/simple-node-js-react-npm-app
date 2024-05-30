@@ -2,24 +2,29 @@ pipeline {
     agent any
 
     stages {
-        stage('initialize') {
+         stage('initialize') {
             steps {
-                echo 'INITIALIZE \n'
+                echo 'INITIALIZE'
                 script {
-                    // 현재 시간을 변수에 저장
-                    env.CURRENT_TIME = sh(script: 'date +%s', returnStdout: true).trim()
+                    // 현재 시간을 밀리초로 저장
+                    env.CURRENT_TIME = new Date().getTime().toString()
                 }
             }
         }
 
         stage('checkout') {
             steps {
-                sh 'echo "Current time: $(date -d @${env.CURRENT_TIME})"'
+                // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
+                sh "echo 'Current time: ${env.CURRENT_TIME}'"
+
+                // Groovy 스크립트에서는 문자열 인터폴레이션을 사용하여 현재 시간 출력
                 echo '''
                 CHECKOUT
 
                 ${env.CURRENT_TIME}
                 '''
+
+                // git 체크아웃
                 git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
             }
         }

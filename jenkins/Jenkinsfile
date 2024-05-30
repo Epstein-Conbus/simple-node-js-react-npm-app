@@ -25,7 +25,7 @@ pipeline {
                 sh 'npm install'
             }
         }
-        state('file edit') {
+        stage('file edit') {
             steps {
                 sh """
                     FILE_PATH="./src/App.js"

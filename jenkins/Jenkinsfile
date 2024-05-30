@@ -63,9 +63,8 @@ pipeline {
             steps {
                 // 변경 사항을 main 브랜치에 머지
                 sh """
-                    git checkout master
                     git pull origin master
-                    git merge --no-ff your-feature-branch
+                    git merge --no-ff master
                     git push origin master
                 """
             }

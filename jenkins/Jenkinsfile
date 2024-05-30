@@ -67,7 +67,6 @@ pipeline {
                     git merge --no-ff your-feature-branch
                     git push origin master
                 """
-                }
             }
         }
 

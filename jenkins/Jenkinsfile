@@ -4,6 +4,7 @@ pipeline {
         stage('build') {
             steps {
                 echo 'building the application...'
+                git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
             }
         }
         stage('test') {

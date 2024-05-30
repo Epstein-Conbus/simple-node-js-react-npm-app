@@ -8,7 +8,7 @@ pipeline {
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()
-                    env.developerCommit = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
+                    env.developerCommit = !sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:29999')
                 }
             }
         }

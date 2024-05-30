@@ -31,7 +31,7 @@ pipeline {
                 script {
                     def filePath = './src/App.js'
                     def fileContents = readFile(filePath).trim()
-                    def oldPattern = "console\.log([0-9]+)"
+                    def oldPattern = 'console\\.log\\(\\s*\\d+\\)'
                     def newString = "console.log(${env.CURRENT_TIME})"
 
                     // 파일 내에서 특정 패턴을 찾아서 치환

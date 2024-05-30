@@ -33,7 +33,7 @@ pipeline {
                     NEW_STRING="console.log(\${env.CURRENT_TIME})"
 
                     if [ -f "\$FILE_PATH" ]; then
-                        sed -E "s|\$OLD_PATTERN|$NEW_STRING|g" "\$FILE_PATH" > "\$FILE_PATH.tmp"
+                        sed -E "s|\$OLD_PATTERN|\$NEW_STRING|g" "\$FILE_PATH" > "\$FILE_PATH.tmp"
                         mv "\$FILE_PATH" "\$FILE_PATH.bak"
                         mv "\$FILE_PATH.tmp" "\$FILE_PATH"
                         echo "파일 수정 완료: \$FILE_PATH"

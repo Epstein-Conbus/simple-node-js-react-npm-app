@@ -17,7 +17,7 @@ pipeline {
         stage('checkout') {
             steps {
                 git url: 'https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git', branch: 'master'
-                echo ${environment.CURRENT_TIME}
+                echo environment.CURRENT_TIME
             }
         }
         stage('deploy') {

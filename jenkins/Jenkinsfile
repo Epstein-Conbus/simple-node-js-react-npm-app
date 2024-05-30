@@ -1,23 +1,20 @@
 pipeline {
     agent any
 
-    environment {
-       CURRENT_TIME=''
-    }
     stages {
         stage('initialize') {
             steps {
                 echo 'INITIALIZE \n'
                 script {
                     // 현재 시간을 변수에 저장
-                    env.CURRENT_TIME = new Date().getTime()
+                    env.CURRENT_TIME = sh(script: 'date +%s', returnStdout: true).trim()
                 }
             }
         }
 
         stage('checkout') {
             steps {
-                sh 'echo "Current time: ${env.CURRENT_TIME}"'
+                sh 'echo "Current time: $(date -d @${env.CURRENT_TIME})"'
                 echo '''
                 CHECKOUT
 

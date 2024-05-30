@@ -5,7 +5,7 @@ import './App.css';
 class App extends Component {
 
   render() {
-      console.log('htest')
+      console.log('이거 배포되나 확인해봐')
     return (
       <div className="App">
         <header className="App-header">

@@ -69,8 +69,6 @@ pipeline {
                     withCredentials([string(credentialsId: env.GIT_CREDENTIALS_ID, variable: 'token')]) {
                         sh 'git config user.email "nobody@nowhere"'
                         sh 'git config user.name "Jenkins"'
-                        sh 'git checkout master'
-                        sh 'git pull origin master'
 
                         def diff = sh("git diff-index --quiet HEAD").toString()
                         if (diff.isEmpty()) {
@@ -78,6 +76,8 @@ pipeline {
                         } else {
                             sh """
                                 git add .
+                                sh 'git checkout master'
+                                sh 'git pull origin master'
                                 git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
                                 git merge --no-ff master
                             """

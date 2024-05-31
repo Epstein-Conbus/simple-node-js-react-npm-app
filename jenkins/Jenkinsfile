@@ -71,7 +71,7 @@ pipeline {
                         sh 'git config user.name "Jenkins"'
 
                         def diff = sh(script: "git diff-index --quiet HEAD", returnStdout: true).trim()
-                        if (diff.isEmpty()) {
+                        if (diff == '') {
                             echo '변경사항이 없음'
                         } else {
                             sh """

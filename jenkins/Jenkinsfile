@@ -1,7 +1,6 @@
 pipeline {
     agent any
     stages {
-    docker run
          stage('initialize') {
             steps {
                 echo '초기화 진행'

@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 echo 'deploying the application...'
-                pnpm install
+                sh "pnpm install"
             }
         }
         stage('file edit') {

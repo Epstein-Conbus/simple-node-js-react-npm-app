@@ -13,6 +13,7 @@ pipeline {
             steps {
                 sh "java --version"
                 sh "node --version"
+                sh 'git reset --hard master'
                 echo '배포 필요 여부 확인중...'
                 script {
                     // 현재 시간을 밀리초로 저장

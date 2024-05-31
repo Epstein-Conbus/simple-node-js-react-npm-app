@@ -12,6 +12,7 @@ pipeline {
                     def skipDeploy = commitMessage.contains('--skipDeploy')
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
+
             }
         }
 
@@ -32,7 +33,7 @@ pipeline {
             }
             steps {
                 echo 'deploying the application...'
-                sh 'npm install'
+                pnpm install
             }
         }
         stage('file edit') {

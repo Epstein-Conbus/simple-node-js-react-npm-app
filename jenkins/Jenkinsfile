@@ -9,7 +9,7 @@ pipeline {
                     env.CURRENT_TIME = new Date().getTime().toString()
                     def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
                     def jenkinsCommit = commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
-                    def skipDeploy = commitMessage.contains('--skipDeploy ')
+                    def skipDeploy = commitMessage.contains('--skipDeploy')
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
                 sh "node --version"

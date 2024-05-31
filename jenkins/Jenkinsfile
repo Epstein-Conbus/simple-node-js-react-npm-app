@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     stages {
          stage('initialize') {
             steps {
@@ -8,14 +7,17 @@ pipeline {
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()
-                    env.developerCommit = !sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim().contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
+                    def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
+                    def jenkinsCommit = commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
+                    def skipDeploy = commitMessage.contains('--skipDeploy')
+                    env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
             }
         }
 
         stage('checkout') {
             when {
-                expression { return env.developerCommit == 'true' }
+                expression { return env.shouldDeploy }
             }
             steps {
                 // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
@@ -26,7 +28,7 @@ pipeline {
         }
         stage('deploy') {
             when {
-                expression { return env.developerCommit == 'true' }
+                expression { return env.shouldDeploy }
             }
             steps {
                 echo 'deploying the application...'
@@ -35,7 +37,7 @@ pipeline {
         }
         stage('file edit') {
             when {
-                expression { return env.developerCommit == 'true' }
+                expression { return env.shouldDeploy }
             }
             steps {
                 script {
@@ -56,7 +58,7 @@ pipeline {
         }
         stage('Merge to Master') {
             when {
-                expression { return env.developerCommit == 'true' }
+                expression { return env.shouldDeploy }
             }
             steps {
                 // 변경 사항을 master 브랜치에 머지

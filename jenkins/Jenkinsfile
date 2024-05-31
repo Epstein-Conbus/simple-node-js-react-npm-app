@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    tools {nodejs "nodejs"}
-    
+    tools {nodejs "nodejs-18"}
+
     stages {
          stage('initialize') {
             steps {

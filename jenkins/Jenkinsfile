@@ -6,34 +6,32 @@ pipeline {
     stages {
          stage('initialize') {
             steps {
-                echo '초기화 진행'
+                sh "java --version"
+                sh "node --version"
+                echo '배포 필요 여부 확인중...'
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()
                     def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
                     def jenkinsCommit = commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다.')
-                    def skipDeploy = commitMessage.contains('--skipDeploy')
-                    env.shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
-                }
-                sh "java --version"
-                sh "node --version"
+                    def skipDeploy = commitMessage.contains('--skip')
+                    def shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
 
+                    if (shouldDeploy == 'false') {
+                        echo '배포가 필요하지 않음, 다음 파이프라인 모두 스킵'
+                        return
+                    }
+                }
             }
         }
 
         stage('deploy') {
-            when {
-                expression { return env.shouldDeploy == 'true' }
-            }
             steps {
                 echo 'deploying the application...'
                 sh "npm install"
             }
         }
         stage('file edit') {
-            when {
-                expression { return env.shouldDeploy == 'true' }
-            }
             steps {
                 script {
                     def filePath = './src/App.js'
@@ -52,9 +50,6 @@ pipeline {
             }
         }
         stage('Merge to Master') {
-            when {
-                expression { return env.shouldDeploy == 'true' }
-            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'Epstein-Conbus', variable: 'token')]) {

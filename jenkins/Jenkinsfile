@@ -3,8 +3,6 @@ pipeline {
 
     tools {nodejs "nodejs-18"}
 
-    environment {
-    }
     stages {
          stage('initialize') {
             steps {

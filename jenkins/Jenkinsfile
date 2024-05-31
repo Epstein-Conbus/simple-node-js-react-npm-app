@@ -63,6 +63,8 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'Epstein-Conbus', variable: 'token')]) {
                         sh """
+                            git config user.email "nobody@nowhere"
+                            git config user.name "Jenkins"
                             git checkout master
                             git pull origin master
 

@@ -67,21 +67,22 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: env.GIT_CREDENTIALS_ID, variable: 'token')]) {
-                        sh """
-                            git config user.email "nobody@nowhere"
-                            git config user.name "Jenkins"
-                            git checkout master
-                            git pull origin master
+                        sh 'git config user.email "nobody@nowhere"'
+                        sh 'git config user.name "Jenkins"'
+                        sh 'git checkout master'
+                        sh 'git pull origin master'
 
-                            git add .
-                            if git diff-index --quiet HEAD; then
-                                echo "No changes detected"
-                            else
+                        def diff = sh("git diff-index --quiet HEAD").toString()
+                        if (diff.isEmpty()) {
+                            echo '변경사항이 없음'
+                        } else {
+                            sh """
+                                git add .
                                 git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
                                 git merge --no-ff master
-                                git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git
-                            fi
-                        """
+                            """
+                            sh 'git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git'
+                        }
                     }
                 }
             }

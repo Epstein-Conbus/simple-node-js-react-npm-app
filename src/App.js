@@ -6,7 +6,6 @@ class App extends Component {
 
   render() {
       console.log(1717151751037)
-      console.log('hi')
     return (
       <div className="App">
         <header className="App-header">

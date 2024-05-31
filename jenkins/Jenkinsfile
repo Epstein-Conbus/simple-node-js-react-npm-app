@@ -11,7 +11,6 @@ pipeline {
                     def jenkinsCommit = commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
                     def skipDeploy = commitMessage.contains('--skipDeploy')
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
-                    console.log(env.shouldDeploy)
                 }
             }
         }

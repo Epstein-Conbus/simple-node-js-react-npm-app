@@ -6,7 +6,7 @@ pipeline {
     stages {
          stage('initialize') {
             steps {
-                echo '초기화  진행'
+                echo '초기화진행'
                 script {
                     // 현재 시간을 밀리초로 저장
                     env.CURRENT_TIME = new Date().getTime().toString()

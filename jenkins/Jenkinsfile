@@ -23,7 +23,7 @@ pipeline {
                     env.shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
                     if (env.shouldDeploy == 'true') {
                         echo '배포 필요, 다음 파이프라인 진행'
-                        sh 'git reset --hard HEAD'
+                        sh 'git reset --hard master'
                     } else {
                         echo '배포 불필요, 다음 파이프라인 스킵'
                     }

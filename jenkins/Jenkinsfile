@@ -72,8 +72,6 @@ pipeline {
 
                         def status = sh(script: 'git status --porcelain', returnStdout: true).trim()
                         if (status) {
-                            echo '변경사항이 없음'
-                        } else {
                             sh """
                                 git add .
                                 sh 'git checkout master'
@@ -82,6 +80,9 @@ pipeline {
                                 git merge --no-ff master
                             """
                             sh 'git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git'
+
+                        } else {
+                            echo '변경사항이 없음'
                         }
                     }
                 }

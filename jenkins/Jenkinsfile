@@ -13,7 +13,7 @@ pipeline {
                     def commitMessage = sh(script: 'git log --format=%B -n 1 HEAD', returnStdout: true).trim()
                     def jenkinsCommit = commitMessage.contains('젠킨스 빌드 및 배포가 완료되었습니다. https://oneflex.info:20001')
                     def skipDeploy = commitMessage.contains('--skipDeploy')
-                    env.shouldDeploy = !jenkinsCommit && !skipDeploy
+                    env.shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
                 }
                 sh "java --version"
                 sh "node --version"
@@ -21,19 +21,9 @@ pipeline {
             }
         }
 
-        stage('checkout') {
-            when {
-                expression { return env.shouldDeploy }
-            }
-            steps {
-                // 형식화된 현재 시간을 쉘 스크립트로 전달하여 출력
-                sh "echo 'Current time: ${env.CURRENT_TIME}'"
-                // git 체크아웃
-            }
-        }
         stage('deploy') {
             when {
-                expression { return env.shouldDeploy }
+                expression { return env.shouldDeploy == 'true' }
             }
             steps {
                 echo 'deploying the application...'
@@ -42,7 +32,7 @@ pipeline {
         }
         stage('file edit') {
             when {
-                expression { return env.shouldDeploy }
+                expression { return env.shouldDeploy == 'true' }
             }
             steps {
                 script {
@@ -63,7 +53,7 @@ pipeline {
         }
         stage('Merge to Master') {
             when {
-                expression { return env.shouldDeploy }
+                expression { return env.shouldDeploy == 'true' }
             }
             steps {
                 script {

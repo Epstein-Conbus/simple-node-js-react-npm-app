@@ -70,7 +70,7 @@ pipeline {
                         sh 'git config user.email "nobody@nowhere"'
                         sh 'git config user.name "Jenkins"'
 
-                        def diff = sh("git diff-index --quiet HEAD").toString()
+                        def diff = sh("git diff-index --quiet HEAD", returnStdout: true).toString()
                         if (diff.isEmpty()) {
                             echo '변경사항이 없음'
                         } else {

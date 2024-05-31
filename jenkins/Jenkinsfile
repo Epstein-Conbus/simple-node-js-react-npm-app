@@ -13,6 +13,7 @@ pipeline {
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
                 sh "node --version"
+                
                 sh "java --version"
             }
         }

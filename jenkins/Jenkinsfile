@@ -23,8 +23,8 @@ pipeline {
                     env.shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
                     if (env.shouldDeploy == 'true') {
                         echo '배포 필요, 다음 파이프라인 진행'
-                        sh 'git reset --hard master'
-                        sh 'git pull origin master --rebase'
+                        sh 'git reset --hard HEAD'
+                        sh 'git pull origin HEAD --rebase'
                         sh 'git checkout master'
                     } else {
                         echo '배포 불필요, 다음 파이프라인 스킵'
@@ -78,6 +78,7 @@ pipeline {
                             sh """
                                 git add .
                                 git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
+                                git pull origin master
                                 git merge --no-ff master
                             """
                             sh 'git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git'

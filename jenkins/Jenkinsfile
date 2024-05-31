@@ -77,7 +77,6 @@ pipeline {
                             sh """
                                 git add .
                                 git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
-                                git pull origin master --ff
                                 git merge --no-ff master
                             """
                             sh 'git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git'

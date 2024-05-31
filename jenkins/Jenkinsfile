@@ -12,6 +12,7 @@ pipeline {
                     def skipDeploy = commitMessage.contains('--skipDeploy ')
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
+                sh "node --version"
 
             }
         }

@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { image 'node:latest'}}
+    agent any
     stages {
          stage('initialize') {
             steps {
@@ -13,7 +13,7 @@ pipeline {
                     env.shouldDeploy = !jenkinsCommit && !skipDeploy
                 }
                 sh "node --version"
-                
+
                 sh "java --version"
             }
         }

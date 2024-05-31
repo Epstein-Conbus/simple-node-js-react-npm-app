@@ -23,6 +23,9 @@ pipeline {
                     env.shouldDeploy = (!jenkinsCommit && !skipDeploy).toString()
                     if (env.shouldDeploy == 'true') {
                         echo '배포 필요, 다음 파이프라인 진행'
+                        sh 'git reset --hard HEAD'
+                        sh 'git pull origin HEAD --rebase'
+                        sh 'git checkout master'
                     } else {
                         echo '배포 불필요, 다음 파이프라인 스킵'
                     }
@@ -66,26 +69,23 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: env.GIT_CREDENTIALS_ID, variable: 'GIT_TOKEN')]) {
-                        sh """
-                            git config user.email "nobody@nowhere"
-                            git config user.name "Jenkins"
-                            git checkout master
-                            git pull origin master
+                    withCredentials([string(credentialsId: env.GIT_CREDENTIALS_ID, variable: 'token')]) {
+                        sh 'git config user.email "nobody@nowhere"'
+                        sh 'git config user.name "Jenkins"'
 
-                            git add .
-                            if git diff-index --quiet HEAD; then
-                                echo "No changes detected"
-                            else
+                        def status = sh(script: 'git status --porcelain', returnStdout: true).trim()
+                        if (status) {
+                            sh """
+                                git add .
                                 git commit -m "젠킨스 빌드 및 배포가 완료되었습니다."
+                                git pull origin master --ff
                                 git merge --no-ff master
-                                GIT_ASKPASS=\$(mktemp)
-                                echo 'echo \$GIT_TOKEN' > \$GIT_ASKPASS
-                                chmod +x \$GIT_ASKPASS
-                                git push https://github.com/Epstein-Conbus/simple-node-js-react-npm-app.git
-                                rm \$GIT_ASKPASS
-                            fi
-                        """
+                            """
+                            sh 'git push https://$token@github.com/Epstein-Conbus/simple-node-js-react-npm-app.git'
+
+                        } else {
+                            echo '변경사항이 없음'
+                        }
                     }
                 }
             }
